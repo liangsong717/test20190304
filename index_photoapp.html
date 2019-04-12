@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+	</head>
+	<body>
+		<h1>照片APP</h1>
+		<hr />
+		<span id="sp1"></span><br />
+		<form id="myForm2" method="post" enctype="multipart/form-data">
+			用户信息:<input type="text" name="userMsg" /><br />
+			用户级别:<input type="text" name="userLevel" /><br />
+			内容:<input type="text" name="content" /><br />
+			位置:<input type="text" name="location" /><br />
+			拍摄者:<input type="text" name="photographer" /><br />
+			<input type="file" name="file" id="file"/>
+			<!--这个是不用form的方式上传文件-->
+			<!--<input type="submit" value="上传"/>--> 
+		</form>
+		<!--这个是用ajax的方式上传文件 按钮如果放到form中，就会导致跨域访问的问题-->	
+		<button id="btn25">照片上传</button>
+	</body>
+	<script type="text/javascript">
+		//照片上传
+		$("#btn25").click(function () {
+			var myFormData = new FormData(document.getElementById("myForm2"));
+			console.log("开始文件上传");
+			$.ajax({
+				type:"post",
+				//url:"http://192.168.0.241:8188/droughtAssess/common/in",
+				url:"http://192.168.0.198:8180/yanshi/photo/upload",
+				data:myFormData,
+				contentType:false,// 告诉jQuery不要去设置Content-Type请求头
+				processData:false,// 告诉jQuery不要去处理发送的数据
+				//cache:false,
+				success:function (result) {
+					$("#sp").html(JSON.stringify(result));
+					console.log("文件上传成功");
+				},
+				error:function (err) {
+					console.log("异常："+JSON.stringify(err));
+				}
+			});
+		})
+	</script>
+</html>
