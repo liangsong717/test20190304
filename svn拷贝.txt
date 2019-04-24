@@ -1,0 +1,8 @@
+【【导出】】
+进入到svn安装目录bin目录下 执行：
+svnadmin dump 【版本库绝对路径 例:d:\Repositories\项目名】 > 【指定路径\项目名.bak】
+
+
+【【导入】】
+bin目录下 执行：
+svnadmin load 【版本库绝对路径】 < 【备份文件位置】
