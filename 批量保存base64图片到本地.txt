@@ -1,0 +1,26 @@
+/**
+	 * 批量保存多个base64图片
+	 * map的 key值为文件名  value值为base64图片
+	 * @param pics 
+	 * @param saveFolder
+	 * @return
+	 * @throws IOException
+	 */
+	public static Map<String, Object> saveTempPic(Map<String, Object> pics,String saveFolder) throws IOException {
+		File folder = new File(saveFolder);
+		if(!folder.exists()) {folder.mkdirs();}
+		Map<String, Object> picIndexs = new HashMap<>();
+		for (String key : pics.keySet()) {
+			String picStr = (String) pics.get(key);
+			if (picStr!=null) {
+				BASE64Decoder decoder = new BASE64Decoder();
+				byte[] b = decoder.decodeBuffer(picStr);
+				ByteArrayInputStream bais = new ByteArrayInputStream(b);
+				BufferedImage bi1 = ImageIO.read(bais);
+				File w2 = new File(saveFolder+key+".png");
+				ImageIO.write(bi1, "png", w2);
+				picIndexs.put("<%"+key+"%>", saveFolder+key+".png");
+			}		
+		}
+		return picIndexs;
+	}
