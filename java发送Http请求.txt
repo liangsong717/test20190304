@@ -1,0 +1,58 @@
+<!--  依赖包 -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.4.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient-cache</artifactId>
+			<version>4.4.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.4.1</version>
+		</dependency>
+<!-- -->
+
+
+
+private static CloseableHttpClient myHttpClient=HttpClients.createDefault();
+
+
+/**
+     * 简单使用get请求（同ajax get请求效果）
+     * @param url
+     * @return
+     * @throws IOException 
+     * @throws ClientProtocolException 
+     */
+    public static String myGet(String url) throws ClientProtocolException, IOException {
+    	HttpGet get =new HttpGet(url);
+		CloseableHttpResponse response=myHttpClient.execute(get);
+		//System.out.println("token验证接口响应状态:"+response.getStatusLine());
+		HttpEntity entity = response.getEntity();
+		return EntityUtils.toString(entity, "UTF-8");
+	}
+
+
+
+	/**
+	 * 发送POST请求
+	 * application/json;charset=UTF-8
+	 * @param url
+	 * @param body
+	 * @return
+	 * @throws IOException
+	 */
+	private String sendHttpPost(String url,String body) throws IOException {
+		HttpPost post = new HttpPost(url);
+		// 解决中文乱码问题
+		StringEntity stringEntity = new StringEntity(body, "UTF-8");
+		stringEntity.setContentEncoding("UTF-8");
+		post.addHeader("Content-Type", "application/json;charset=UTF-8");
+		post.setEntity(stringEntity);
+		CloseableHttpResponse response = HttpClients.createDefault().execute(post);
+		return EntityUtils.toString(response.getEntity(),"UTF-8");
+	}
