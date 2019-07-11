@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <TABLE ID="1" TYPE="LINK" NAME="NAME_1" CONTENT="https://github.com/1"/>
+    <TABLE ID="2" TYPE="LINK" NAME="NAME_2" CONTENT="https://github.com/2"/>
+    <TABLE ID="3" TYPE="LINK" NAME="NAME_3" CONTENT="https://github.com/3"/>
+    <TABLE ID="4" TYPE="LINK" NAME="NAME_4" CONTENT="https://github.com/4"/>
+</dataset>
