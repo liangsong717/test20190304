@@ -1,0 +1,45 @@
+public static String createInsertSQL(String tableName,List datas) {
+        StringBuilder sqls=new StringBuilder();
+        StringBuilder sqlField=null;
+        StringBuilder sqlValue=null;
+        if(datas==null||datas.size()==0){return null;}
+        String sqlModel ="Insert into "+tableName+" (<%FIELDS%>) values (<%RECORDS%>);\n";
+        for (Object data:datas) {
+            try {
+                String sql=sqlModel;
+                sqlField= new StringBuilder();
+                sqlValue=new StringBuilder();
+                Field[] fields = data.getClass().getDeclaredFields();
+                for (Field field : fields) {
+                    field.setAccessible(true);
+//                    System.out.print("字段名: "+field.getName()+"\t\t");
+//                    System.out.println("值："+field.get(data));
+                    sqlField.append(field.getName().toUpperCase()+",");
+                    Object value = field.get(data);
+                    if(value instanceof String){
+                        sqlValue.append(value==null?"null,":("'"+((String) value).trim()+"',"));
+                    }else if(value instanceof Date){
+                        Date date = (Date) value;
+                        sqlValue.append(value==null?"null,":("to_timestamp('"+StringUtil.dateToString(date,"yyyy-MM-dd HH:mm:ss")+"','yyyy-MM-dd HH:mi:ss'),"));
+                    }else if(value instanceof BigDecimal){
+                        sqlValue.append(value==null?"null,":("to_number('"+((BigDecimal) value).doubleValue()+"'),"));
+                    }else{
+                        sqlValue.append(value==null?"null,":("'"+value+"',"));
+                    }
+                }
+                if (sqlField.lastIndexOf(",")==(sqlField.length()-1)&&sqlValue.lastIndexOf(",")==(sqlValue.length()-1)) {
+                    sqlField.deleteCharAt(sqlField.length()-1);
+                    sqlValue.deleteCharAt(sqlValue.length()-1);
+                    sql=sql.replaceAll("<%FIELDS%>",sqlField.toString());
+                    sql=sql.replaceAll("<%RECORDS%>",sqlValue.toString());
+                    //System.out.println("sql:"+sql);
+                    sqls.append(sql);
+                }
+            } catch (IllegalAccessException e) {
+                System.out.println("【记录error.txt】反射异常："+ JSON.toJSONString(data)+"");
+                FileUtil.writeErrorMsg(JSON.toJSONString(data)+"\n"+e.getMessage());
+            }
+        }
+        //System.out.println(sqls.toString());
+        return sqls.toString();
+    }
