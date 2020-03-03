@@ -1,0 +1,30 @@
+=============================
+docker network create --driver bridge --subnet=182.18.0.0/16 --gateway=182.18.0.1 zoonet
+
+====
+
+docker run -d -p 2181:2181 --name zookeeper_node1 --privileged --restart always --network zoonet --ip 182.18.0.2 \
+-v /opt/docker/zookeeper-cluster/zookeeper-node1/volumes/data:/data \
+-v /opt/docker/zookeeper-cluster/zookeeper-node1/volumes/datalog:/datalog \
+-v /opt/docker/zookeeper-cluster/zookeeper-node1/volumes/logs:/logs \
+-e ZOO_MY_ID=1 \
+-e "ZOO_SERVERS=server.1=182.18.0.2:2888:3888 server.2=182.18.0.3:2888:3888 server.3=182.18.0.4:2888:3888" ab94f52d305f
+
+
+===
+
+docker run -d -p 2182:2181 --name zookeeper_node2 --privileged --restart always --network zoonet --ip 182.18.0.3 \
+-v /opt/docker/zookeeper-cluster/zookeeper-node2/volumes/data:/data \
+-v /opt/docker/zookeeper-cluster/zookeeper-node2/volumes/datalog:/datalog \
+-v /opt/docker/zookeeper-cluster/zookeeper-node2/volumes/logs:/logs \
+-e ZOO_MY_ID=2 \
+-e "ZOO_SERVERS=server.1=182.18.0.2:2888:3888 server.2=182.18.0.3:2888:3888 server.3=182.18.0.4:2888:3888" ab94f52d305f
+
+===
+
+docker run -d -p 2183:2181 --name zookeeper_node3 --privileged --restart always --network zoonet --ip 182.18.0.4 \
+-v /opt/docker/zookeeper-cluster/zookeeper-node3/volumes/data:/data \
+-v /opt/docker/zookeeper-cluster/zookeeper-node3/volumes/datalog:/datalog \
+-v /opt/docker/zookeeper-cluster/zookeeper-node3/volumes/logs:/logs \
+-e ZOO_MY_ID=3 \
+-e "ZOO_SERVERS=server.1=182.18.0.2:2888:3888 server.2=182.18.0.3:2888:3888  server.3=182.18.0.4:2888:3888" ab94f52d305f
