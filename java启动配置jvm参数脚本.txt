@@ -1,0 +1,34 @@
+# 参考：https://blog.csdn.net/dymkkj/article/details/105043387
+
+
+#! /bin/sh
+# 使用将下面添加注释去掉(markdown语法需要转义#，在使用时需要将转义符去掉)
+
+# GC 日志存放目录
+LOG_DIR=”/tmp/logs” 
+
+# 打印GC日志
+JAVA_OPT_LOG=”-verbose:gc” 
+
+# 打印GC详细信息
+JAVA_OPT_LOG=”${JAVA_OPT_LOG} -XX:+PrintGCDetails” 
+
+# 打印GC日志带系统时间
+JAVA_OPT_LOG=”${JAVA_OPT_LOG} -XX:+PrintGCDateStamps” 
+
+# 打印应用停顿(STW)时间
+JAVA_OPT_LOG=”${JAVA_OPT_LOG} -XX:PrintGCApplicationStoppedTime”
+
+# 打印对象年龄分布，对调优MaxTenuringThreshold参数帮助很大
+JAVA_OPT_LOG=”${JAVA_OPT_LOG} -XX:+PrintTenuringDistribution” 
+
+#将以上GC内容输出到文件中，并指定gc日志文件的格式
+JAVA_OPT_LOG=”${JAVA_OPT_LOG} -Xloggc:${LOG_DIR}/gc_%p.log” 
+
+# 指定堆内存溢出相关的日志存储目录，Dump文件保存路径，历史错误日志文件路径及命名格式
+JAVA_OPT_OOM=” -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${LOG_DIR} -XX:ErrorFile=${LOG_DIR}/hs_error_pid%p.log” 
+
+JAVA_OPT=”${JAVA_OPT_LOG} ${JAVA_OPT_OOM}”
+
+ # JVM缩简日志输出
+JAVA_OPT=”${JAVA_OPT} -XX:-OmitStackTraceInFastThrow”  
